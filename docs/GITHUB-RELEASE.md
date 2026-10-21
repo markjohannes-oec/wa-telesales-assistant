@@ -11,6 +11,8 @@ Source code disimpan di repository. File Windows portable disimpan sebagai asset
 
 Workflow membutuhkan waktu cukup lama karena model AI lokal berukuran sekitar 1,1 GB.
 
+Jika tag dibuat melalui halaman Release dan build tidak berjalan otomatis, buka **Actions → Build Windows portable release → Run workflow**. Gunakan branch `main`, isi `release_tag` dengan tag release yang sudah ada (contoh `v0.1.0`), lalu jalankan. Skrip dan versi aplikasi pada branch yang dipilih harus sesuai dengan source pada tag tersebut. Jika `release_tag` kosong, eksekusi manual hanya memeriksa/build dan tidak menerbitkan asset.
+
 ## Verifikasi file di Windows
 
 ```powershell
