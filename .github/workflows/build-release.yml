@@ -1,0 +1,47 @@
+name: Build Windows portable release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build portable executable
+        run: npm run dist
+
+      - name: Write checksum
+        shell: powershell
+        run: |
+          $asset = Get-ChildItem 'dist\*.exe' | Select-Object -First 1
+          $hash = (Get-FileHash -LiteralPath $asset.FullName -Algorithm SHA256).Hash
+          "$($asset.Name)  $hash" | Out-File 'dist\SHA256SUMS.txt' -Encoding ascii
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.exe
+            dist/SHA256SUMS.txt
