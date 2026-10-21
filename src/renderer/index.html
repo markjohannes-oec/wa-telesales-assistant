@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: file:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src http://127.0.0.1:* http://localhost:*;" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WA Telesales Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">LOCAL DESKTOP TOOL</div>
+        <h1>WA Telesales Assistant</h1>
+      </div>
+      <div class="top-actions">
+        <span id="connectionBadge" class="badge offline">Offline</span>
+        <button id="connectBtn" class="button primary">Hubungkan</button>
+        <button id="switchBtn" class="button secondary">Ganti nomor</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="left-column">
+        <article class="card connection-card">
+          <div class="card-heading"><h2>Koneksi WhatsApp</h2><span id="connectionText">Aplikasi sedang disiapkan</span></div>
+          <div id="qrPanel" class="qr-panel hidden">
+            <img id="qrImage" alt="QR WhatsApp" />
+            <p>Scan QR ini dari WhatsApp di ponsel untuk menghubungkan nomor.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-heading"><h2>Daftar kontak</h2><span id="contactCount">0 kontak</span></div>
+          <div class="source-row">
+            <button id="importFileBtn" class="button secondary">Import CSV / XLSX</button>
+            <input id="sheetUrl" class="input" placeholder="Link Google Sheets published CSV" />
+            <button id="importSheetBtn" class="button secondary">Ambil Sheet</button>
+          </div>
+          <div class="hint">Kolom wajib: <code>Nama</code> dan <code>Nomor</code>. Nomor Indonesia dengan awalan 08 akan dibaca sebagai +62.</div>
+          <div class="table-wrap"><table><thead><tr><th>Nama</th><th>Nomor</th><th>Status</th></tr></thead><tbody id="contactsBody"><tr><td colspan="3" class="empty">Belum ada kontak.</td></tr></tbody></table></div>
+          <button id="clearContactsBtn" class="text-button danger-text">Hapus daftar kontak</button>
+        </article>
+
+        <article class="card">
+          <div class="card-heading"><h2>Campaign</h2><span id="campaignStatus">Idle</span></div>
+          <div class="form-grid">
+            <label>Nama campaign<input id="campaignName" class="input" placeholder="Contoh: Opening Oktober" /></label>
+            <label>Target audiens<input id="campaignAudience" class="input" placeholder="Contoh: Orang tua siswa kelas 6" /></label>
+            <label>Tahap percakapan<select id="campaignStage" class="input"><option>Opening</option><option>Probe</option><option>Objection</option><option>Payment</option><option>Follow Up</option><option>Closing</option></select></label>
+            <label>Jeda antar pesan (detik)<input id="delaySeconds" class="input" type="number" min="1" step="1" /></label>
+            <label>Batas penerima per hari<input id="dailyLimit" class="input" type="number" min="1" step="1" /></label>
+          </div>
+          <div id="dailyUsage" class="hint">0 / 50 penerima hari ini</div>
+          <div id="riskNotice" class="risk-notice low">Risiko lebih rendah menurut pengaturan lokal, tetapi WhatsApp tetap dapat membatasi akun tanpa pemberitahuan.</div>
+          <div class="template-tabs"><button id="textModeBtn" class="tab active">Template teks</button><button id="imageModeBtn" class="tab">Template gambar</button></div>
+          <div id="textTemplatePanel"><label>Pesan template<textarea id="templateText" class="textarea" rows="5" placeholder="Halo {Nama}, ..."></textarea></label><div class="hint">Gunakan variabel <code>{Nama}</code>. Pesan dikirim tanpa approval per kontak setelah tombol Mulai ditekan.</div></div>
+          <div id="imageTemplatePanel" class="hidden"><div class="image-picker"><div id="imagePreview" class="image-preview">Belum ada gambar</div><div><button id="chooseImageBtn" class="button secondary">Pilih gambar</button><p id="imagePath" class="hint">Gambar akan dikirim tanpa caption jika caption kosong.</p></div></div><label>Caption opsional<textarea id="imageCaption" class="textarea" rows="3" placeholder="Opsional, bisa memakai {Nama}"></textarea></label></div>
+          <div id="pendingNotice" class="pending-notice hidden"><strong>Pengiriman perlu ditinjau</strong><span id="pendingDetail"></span><div><button id="pendingSentBtn" class="button secondary">Tandai sudah terkirim</button><button id="pendingRetryBtn" class="button secondary">Kirim ulang</button></div></div>
+          <div class="campaign-actions"><button id="startBtn" class="button primary large">Mulai campaign</button><button id="stopBtn" class="button secondary large">Pause / Stop</button><button id="resetBtn" class="button secondary large">Reset antrean</button></div>
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div><div id="progressText" class="hint">Belum berjalan.</div>
+        </article>
+      </section>
+
+      <aside class="right-column">
+        <article class="card reply-card">
+          <div class="card-heading"><h2>Saran balasan</h2><span class="ai-label">AI lokal · draft saja</span></div>
+          <div id="replyEmpty" class="empty large-empty">Belum ada balasan masuk.</div>
+          <div id="replyPanel" class="hidden"></div>
+          <div id="replyList"></div>
+        </article>
+
+        <article class="card settings-card">
+          <div class="card-heading"><h2>AI lokal bawaan</h2><span id="aiStatus" class="ai-label">Memuat</span></div>
+          <p class="hint ai-description">Model QC berjalan offline dari executable ini. Tidak membutuhkan Ollama, API key, akun provider, atau download model tambahan.</p>
+          <button id="restartAiBtn" class="button secondary full">Muat ulang AI</button>
+          <p id="aiDetail" class="hint">Menyiapkan runtime dan model…</p>
+        </article>
+      </aside>
+    </main>
+    <div id="toast" class="toast hidden"></div>
+    <script src="renderer.js"></script>
+  </body>
+</html>
