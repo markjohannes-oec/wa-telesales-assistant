@@ -26,7 +26,7 @@ Pada pembukaan pertama, aplikasi akan menampilkan QR. Scan QR dari WhatsApp pons
 
 ## Membagikan ke laptop lain
 
-Gunakan satu file [WA Telesales Assistant 0.1.0.exe](../dist/WA%20Telesales%20Assistant%200.1.0.exe) dari folder `dist/`. Salin file tersebut ke laptop Windows 10/11 64-bit lalu jalankan dengan double-click. Tidak perlu menginstal Node.js, npm, Python, Ollama, runtime AI, Chromium, atau library tambahan. Ukuran file sekitar 1,3 GB karena Chromium, runtime AI, dan model sudah dibundel. Laptop tujuan tetap membutuhkan internet untuk WhatsApp Web dan harus scan QR untuk nomor yang digunakan di laptop itu.
+Unduh satu file **WA Telesales Assistant 0.1.0.exe** dari bagian **Assets** pada [GitHub Releases](https://github.com/markjohannes-oec/wa-telesales-assistant/releases). Jangan pilih **Source code**, karena itu bukan aplikasi siap jalan. Repository ini private, jadi unduhan hanya dapat diakses oleh akun yang memiliki izin repository. Untuk hasil build lokal, gunakan file tersebut dari folder `dist/`. Salin file tersebut ke laptop Windows 10/11 64-bit lalu jalankan dengan double-click. Tidak perlu menginstal Node.js, npm, Python, Ollama, runtime AI, Chromium, atau library tambahan. Ukuran file sekitar 1,3 GB karena Chromium, runtime AI, dan model sudah dibundel. Laptop tujuan tetap membutuhkan internet untuk WhatsApp Web dan harus scan QR untuk nomor yang digunakan di laptop itu.
 
 Jika template gambar sudah tersimpan di metadata lalu aplikasi dipindahkan ke laptop lain, pilih ulang file gambarnya karena path file lokal tidak ikut dipindahkan.
 
