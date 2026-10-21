@@ -1,0 +1,30 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('waApp', {
+  getState: () => ipcRenderer.invoke('app:get-state'),
+  connect: () => ipcRenderer.invoke('wa:connect'),
+  switchNumber: () => ipcRenderer.invoke('wa:switch-number'),
+  disconnect: () => ipcRenderer.invoke('wa:disconnect'),
+  importFile: () => ipcRenderer.invoke('contacts:import-file'),
+  importGoogle: (url) => ipcRenderer.invoke('contacts:import-google', url),
+  clearContacts: () => ipcRenderer.invoke('contacts:clear'),
+  updateCampaign: (campaign) => ipcRenderer.invoke('campaign:update', campaign),
+  startCampaign: () => ipcRenderer.invoke('campaign:start'),
+  stopCampaign: () => ipcRenderer.invoke('campaign:stop'),
+  resetCampaign: () => ipcRenderer.invoke('campaign:reset'),
+  resolvePending: (action) => ipcRenderer.invoke('campaign:resolve-pending', action),
+  chooseImage: () => ipcRenderer.invoke('campaign:choose-image'),
+  startAi: () => ipcRenderer.invoke('ai:start'),
+  stopAi: () => ipcRenderer.invoke('ai:stop'),
+  sendReply: (payload) => ipcRenderer.invoke('reply:send', payload),
+  retryReply: (payload) => ipcRenderer.invoke('reply:retry', payload),
+  onState: (callback) => ipcRenderer.on('app:state', (_event, payload) => callback(payload)),
+  onAiState: (callback) => ipcRenderer.on('ai:state', (_event, payload) => callback(payload)),
+  onAiError: (callback) => ipcRenderer.on('ai:error', (_event, payload) => callback(payload)),
+  onQr: (callback) => ipcRenderer.on('app:state', (_event, payload) => { if (payload.lastQr) callback(payload.lastQr); }),
+  onReplyNew: (callback) => ipcRenderer.on('reply:new', (_event, payload) => callback(payload)),
+  onReplyReady: (callback) => ipcRenderer.on('reply:ready', (_event, payload) => callback(payload)),
+  onReplyError: (callback) => ipcRenderer.on('reply:error', (_event, payload) => callback(payload)),
+  onCampaignProgress: (callback) => ipcRenderer.on('campaign:progress', (_event, payload) => callback(payload)),
+  onCampaignNotice: (callback) => ipcRenderer.on('campaign:notice', (_event, payload) => callback(payload))
+});
